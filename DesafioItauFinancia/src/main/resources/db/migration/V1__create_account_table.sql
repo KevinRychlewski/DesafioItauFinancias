@@ -1,0 +1,7 @@
+CREATE TABLE account (
+    id UUID PRIMARY KEY,
+    cpf VARCHAR(255) NOT NULL UNIQUE,
+    saldo NUMERIC(19, 2) NOT NULL,
+    data_criacao TIMESTAMP NOT NULL,
+    ativo BOOLEAN NOT NULL
+);

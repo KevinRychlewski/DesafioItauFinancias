@@ -42,7 +42,7 @@ public class TransferService {
         Account secondAccount = accountRepository.findByIdForUpdate(secondId)
                 .orElseThrow(() -> new RuntimeException("Conta com id " + secondId + " não encontrada"));
         Account sourceAccount = request.getSourceAccountId().equals(firstAccount.getId()) ? firstAccount : secondAccount;
-        Account destinationAccount = request.getDestinationAccountId().equals(firstAccount.getId()) ? secondAccount : firstAccount;
+        Account destinationAccount = request.getDestinationAccountId().equals(firstAccount.getId()) ? firstAccount : secondAccount;
         if (!sourceAccount.isAtivo())
             throw new RuntimeException("Conta de origem está inativa");
         if (!destinationAccount.isAtivo())

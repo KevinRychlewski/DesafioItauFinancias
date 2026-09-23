@@ -3,6 +3,9 @@ package com.Rychlewski.DesafioItauFinancia.service;
 import com.Rychlewski.DesafioItauFinancia.dto.request.CreateAccountRequest;
 import com.Rychlewski.DesafioItauFinancia.dto.response.AccountResponse;
 import com.Rychlewski.DesafioItauFinancia.entity.Account;
+import com.Rychlewski.DesafioItauFinancia.exception.AccountNotFoundException;
+import com.Rychlewski.DesafioItauFinancia.exception.InsufficientBalanceException;
+import com.Rychlewski.DesafioItauFinancia.exception.InvalidAmountException;
 import com.Rychlewski.DesafioItauFinancia.mapper.AccountMapper;
 import com.Rychlewski.DesafioItauFinancia.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,7 @@ public class AccountService {
 
     public AccountResponse createAccount(CreateAccountRequest request) {
         if (request.getSaldo() == null || request.getSaldo().compareTo(BigDecimal.ZERO) < 0) {
-            throw new RuntimeException("O saldo inicial não pode ser negativo");
+            throw new InvalidAmountException("O saldo inicial não pode ser negativo");
         }
         Account account = AccountMapper.toEntity(request);
         Account savedAccount = accountRepository.save(account);
@@ -31,7 +34,7 @@ public class AccountService {
     public AccountResponse getAccount(UUID id) {
         AccountResponse response = accountRepository.findById(id)
                 .map(AccountMapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Conta com id " + id + " não encontrada"));
+                .orElseThrow(() -> new AccountNotFoundException("Conta com id " + id + " não encontrada"));
         return response;
     }
 

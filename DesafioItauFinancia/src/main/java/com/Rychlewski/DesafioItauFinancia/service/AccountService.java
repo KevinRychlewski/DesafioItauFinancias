@@ -4,6 +4,7 @@ import com.Rychlewski.DesafioItauFinancia.dto.request.CreateAccountRequest;
 import com.Rychlewski.DesafioItauFinancia.dto.response.AccountResponse;
 import com.Rychlewski.DesafioItauFinancia.entity.Account;
 import com.Rychlewski.DesafioItauFinancia.exception.AccountNotFoundException;
+import com.Rychlewski.DesafioItauFinancia.exception.DuplicateCpfException;
 import com.Rychlewski.DesafioItauFinancia.exception.InsufficientBalanceException;
 import com.Rychlewski.DesafioItauFinancia.exception.InvalidAmountException;
 import com.Rychlewski.DesafioItauFinancia.mapper.AccountMapper;
@@ -25,6 +26,9 @@ public class AccountService {
     public AccountResponse createAccount(CreateAccountRequest request) {
         if (request.getSaldo() == null || request.getSaldo().compareTo(BigDecimal.ZERO) < 0) {
             throw new InvalidAmountException("O saldo inicial não pode ser negativo");
+        }
+        if (accountRepository.existsByCpf(request.getCpf())) {
+            throw new DuplicateCpfException("CPF " + request.getCpf() + " já está em uso");
         }
         Account account = AccountMapper.toEntity(request);
         Account savedAccount = accountRepository.save(account);

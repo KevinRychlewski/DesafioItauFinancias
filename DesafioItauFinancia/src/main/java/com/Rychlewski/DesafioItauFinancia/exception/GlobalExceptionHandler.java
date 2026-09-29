@@ -22,6 +22,13 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(DuplicateCpfException.class)
+    public ProblemDetail handleDuplicateCpf(DuplicateCpfException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("CPF duplicado");
+        return problem;
+    }
+
     @ExceptionHandler({
             InsufficientBalanceException.class,
             InactiveAccountException.class,
